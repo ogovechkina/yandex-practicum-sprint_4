@@ -1,19 +1,18 @@
 package ru.yandex.praktikum.sprint4.scooter.page;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import ru.yandex.praktikum.sprint4.scooter.model.Order;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class OrderPage extends BasePage {
     public static final String ORDER_URL = "https://qa-scooter.praktikum-services.ru/order";
     public static final String TRACK_URL = "https://qa-scooter.praktikum-services.ru/track";
 
-    private final By headerOrderBtn = By.xpath(".//div[@class='Header_Nav__AGCXC']/button[text()='Заказать']");
-    private final By roadmapFinishOrderBtn = By.xpath(".//div[@class='Home_FinishButton__1_cWm']/button[text()='Заказать']");
     private final By orderFirstNameInput = By.cssSelector(".Order_Form__17u6u > .Input_InputContainer__3NykH > input[placeholder*='Имя']");
     private final By orderLastNameInput = By.cssSelector(".Order_Form__17u6u > .Input_InputContainer__3NykH > input[placeholder*='Фамилия']");
     private final By orderAddressInput = By.cssSelector(".Order_Form__17u6u > .Input_InputContainer__3NykH > input[placeholder*='Адрес']");
@@ -32,14 +31,6 @@ public class OrderPage extends BasePage {
 
     public OrderPage(WebDriver driver) {
         super(driver);
-    }
-    
-    public void clickHeaderOrderBtn() {
-        driver.findElement(headerOrderBtn).click();
-    }
-
-    public void clickRoadmapFinishOrderBtn() {
-        driver.findElement(roadmapFinishOrderBtn).click();
     }
 
     public void fillOrderForm(Order order) {
