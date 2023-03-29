@@ -10,17 +10,7 @@ public abstract class BasePage {
 
     protected final WebDriver driver;
 
-    private final By acceptCookieBtn = By.id("rcc-confirm-button");
-
     public BasePage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public void clickAcceptCookieBtn() {
-        try {
-            driver.findElement(acceptCookieBtn).click();
-        } catch (Exception e) {
-            // skip
-        }
     }
 }

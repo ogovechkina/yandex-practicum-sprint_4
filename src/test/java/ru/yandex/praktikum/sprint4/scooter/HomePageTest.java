@@ -1,58 +1,53 @@
 package ru.yandex.praktikum.sprint4.scooter;
 
+import java.util.Arrays;
+import java.util.Collection;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import ru.yandex.praktikum.sprint4.scooter.page.HomePage;
-import ru.yandex.praktikum.sprint4.scooter.page.OrderPage;
 
-import static org.junit.Assert.*;
-
+@RunWith(Parameterized.class)
 public class HomePageTest extends BaseTest {
 
     private HomePage page;
 
+    private final String faqQuestion;
+    private final String faqAnswer;
+
+    public HomePageTest(String faqQuestion, String faqAnswer) {
+        this.faqQuestion = faqQuestion;
+        this.faqAnswer = faqAnswer;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> testFaqData() {
+        return Arrays.asList(new Object[][]{
+            {"Сколько это стоит? И как оплатить?", "Сутки — 400 рублей. Оплата курьеру — наличными или картой."},
+            {"Хочу сразу несколько самокатов! Так можно?", "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим."},
+            {"Как рассчитывается время аренды?", "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30."},
+            {"Можно ли заказать самокат прямо на сегодня?", "Только начиная с завтрашнего дня. Но скоро станем расторопнее."},
+            {"Можно ли продлить заказ или вернуть самокат раньше?", "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010."},
+            {"Вы привозите зарядку вместе с самокатом?", "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится."},
+            {"Можно ли отменить заказ?", "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои."},
+            {"Я жизу за МКАДом, привезёте?", "Да, обязательно. Всем самокатов! И Москве, и Московской области."}
+        });
+    }
+    
     @Before
-    @Override
-    public void setUp() {
-        super.setUp();
-
+    public void setUpEach() {
         page = new HomePage(driver);
-
-        // Нажимаем на кнопку принятия куки, чтобы скрыть панель согласия на использование файлов cookie
-        // т.к. она мешает выполнять клики по аккордеону "Вопросы о важном"
-        page.clickAcceptCookieBtn();
+        driver.get(HomePage.URL);
     }
 
     @Test
     public void testFaqAccordion() {
-        // оба ответа скрыты
-        assertFalse(page.isFaqAnswer1Visible());
-        assertFalse(page.isFaqAnswer2Visible());
+        assertTrue(page.isFaqAnswerHidden(faqAnswer));
 
-        // кликнув на 1й вопрос должен отобразиться 1й ответ
-        page.clickFaqQuestion1();
-        page.waitFaqAnswer1Visible();
-        assertTrue(page.isFaqAnswer1Visible());
-        assertFalse(page.isFaqAnswer2Visible());
+        page.clickFaqQuestion(faqQuestion);
 
-        // кликнув на 2й вопрос должен отобразиться 2й ответ, а 1й ответ скрыться
-        page.clickFaqQuestion2();
-        page.waitFaqAnswer2Visible();
-        assertFalse(page.isFaqAnswer1Visible());
-        assertTrue(page.isFaqAnswer2Visible());
-    }
-
-    @Test
-    public void testOrderByClickHeaderOrderButton() {
-        page.clickHeaderOrderBtn();
-        page.waitOrderFormVisibility();
-        assertEquals(driver.getCurrentUrl(), OrderPage.URL);
-    }
-
-    @Test
-    public void testOrderByClickRoadmapFinishOrderButton() {
-        page.clickRoadmapFinishOrderBtn();
-        page.waitOrderFormVisibility();
-        assertEquals(driver.getCurrentUrl(), OrderPage.URL);
+        assertTrue(page.isFaqAnswerVisible(faqAnswer));
     }
 }

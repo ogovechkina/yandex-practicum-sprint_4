@@ -1,5 +1,9 @@
 package ru.yandex.praktikum.sprint4.scooter;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,13 +11,8 @@ import org.junit.runners.Parameterized;
 import ru.yandex.praktikum.sprint4.scooter.model.Color;
 import ru.yandex.praktikum.sprint4.scooter.model.Order;
 import ru.yandex.praktikum.sprint4.scooter.model.RentalPeriod;
+import ru.yandex.praktikum.sprint4.scooter.page.HomePage;
 import ru.yandex.praktikum.sprint4.scooter.page.OrderPage;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class OrderPageTest extends BaseTest {
@@ -37,19 +36,32 @@ public class OrderPageTest extends BaseTest {
     }
 
     @Before
-    @Override
-    public void setUp() {
-        super.setUp();
-
+    public void setUpEach() {
         page = new OrderPage(driver);
-
-        // Нажимаем на кнопку принятия куки, чтобы скрыть панель согласия на использование файлов cookie
-        // т.к. она мешает выполнять клики по аккордеону "Вопросы о важном"
-        page.clickAcceptCookieBtn();
     }
 
     @Test
-    public void testOrder() {
+    public void testOrderByClickHeaderOrderButton() {
+        driver.get(HomePage.URL);
+        
+        page.clickHeaderOrderBtn();
+        assertTrue(driver.getCurrentUrl().startsWith(OrderPage.ORDER_URL));
+        
+        page.fillOrderForm(order);
+        page.clickOrderConfirmBtn();
+
+        page.clickOrderStatusBtn();
+
+        assertTrue(driver.getCurrentUrl().startsWith(OrderPage.TRACK_URL));
+    }
+    
+    @Test
+    public void testOrderByClickRoadmapFinishOrderButton() {
+        driver.get(HomePage.URL);
+        
+        page.clickRoadmapFinishOrderBtn();
+        assertTrue(driver.getCurrentUrl().startsWith(OrderPage.ORDER_URL));
+        
         page.fillOrderForm(order);
         page.clickOrderConfirmBtn();
 
